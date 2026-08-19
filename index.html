@@ -25,50 +25,44 @@
           <section class="panel-section">
             <div class="section-heading">
               <span>01</span>
-              <h2>Source frames</h2>
+              <h2>Image library</h2>
             </div>
-            <div class="source-stack">
-              <article class="source-card" data-slot="left">
-                <div class="source-topline"><span>LEFT FRAME</span><span id="leftMeta">Sample 01</span></div>
-                <button class="image-drop" type="button" data-open-file="left" aria-label="Choose left frame">
-                  <img id="leftThumb" alt="Left film frame preview" />
-                  <span class="drop-overlay">Replace image</span>
-                </button>
-                <div class="source-actions">
-                  <button class="icon-button" type="button" data-rotate="left" data-amount="-90" title="Rotate left frame counterclockwise" aria-label="Rotate left frame counterclockwise">↶</button>
-                  <button class="icon-button" type="button" data-rotate="left" data-amount="90" title="Rotate left frame clockwise" aria-label="Rotate left frame clockwise">↷</button>
-                </div>
-                <input id="leftInput" type="file" accept="image/jpeg,image/png,image/webp" hidden />
-              </article>
-              <article class="source-card" data-slot="right">
-                <div class="source-topline"><span>RIGHT FRAME</span><span id="rightMeta">Sample 02</span></div>
-                <button class="image-drop" type="button" data-open-file="right" aria-label="Choose right frame">
-                  <img id="rightThumb" alt="Right film frame preview" />
-                  <span class="drop-overlay">Replace image</span>
-                </button>
-                <div class="source-actions">
-                  <button class="icon-button" type="button" data-rotate="right" data-amount="-90" title="Rotate right frame counterclockwise" aria-label="Rotate right frame counterclockwise">↶</button>
-                  <button class="icon-button" type="button" data-rotate="right" data-amount="90" title="Rotate right frame clockwise" aria-label="Rotate right frame clockwise">↷</button>
-                </div>
-                <input id="rightInput" type="file" accept="image/jpeg,image/png,image/webp" hidden />
-              </article>
+            <button class="library-drop" id="libraryDrop" type="button">
+              <strong>Drop scans here</strong><span>or choose multiple images</span>
+            </button>
+            <input id="libraryInput" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden />
+            <div class="library-grid" id="libraryGrid" aria-label="Image library"></div>
+          </section>
+
+          <section class="panel-section queue-section">
+            <div class="section-heading"><span>02</span><h2>Pairing queues</h2></div>
+            <p class="queue-note">The first item in each queue forms the preview. Add scans from the library, then reorder or rotate them here.</p>
+            <div class="queues">
+              <section class="queue" aria-labelledby="leftQueueTitle">
+                <div class="queue-header"><h3 id="leftQueueTitle">LEFT</h3><span id="leftQueueCount">0</span></div>
+                <ol class="queue-list" id="leftQueue"></ol>
+              </section>
+              <section class="queue" aria-labelledby="rightQueueTitle">
+                <div class="queue-header"><h3 id="rightQueueTitle">RIGHT</h3><span id="rightQueueCount">0</span></div>
+                <ol class="queue-list" id="rightQueue"></ol>
+              </section>
             </div>
           </section>
 
           <section class="panel-section">
-            <div class="section-heading"><span>02</span><h2>Film gap</h2></div>
+            <div class="section-heading"><span>03</span><h2>Film gap</h2></div>
             <label class="range-label" for="gapRange"><span>Gap width</span><output id="gapValue">9.8%</output></label>
             <input id="gapRange" type="range" min="0" max="25" step="0.1" value="9.8" />
             <label class="toggle-row" for="grainToggle"><span>Fine grain</span><input id="grainToggle" type="checkbox" checked /><i></i></label>
           </section>
 
           <section class="panel-section">
-            <div class="section-heading"><span>03</span><h2>Export</h2></div>
+            <div class="section-heading"><span>04</span><h2>Export</h2></div>
             <label class="select-label" for="formatSelect">File format</label>
             <select id="formatSelect"><option value="image/jpeg">JPEG</option><option value="image/png">PNG</option></select>
             <label class="range-label" for="qualityRange"><span>JPEG quality</span><output id="qualityValue">92</output></label>
             <input id="qualityRange" type="range" min="70" max="100" step="1" value="92" />
-            <button class="export-button" id="exportButton" type="button">Export merged frame <span>↓</span></button>
+            <button class="export-button" id="exportButton" type="button">Export queue <span id="exportCount">0 pairs</span></button>
           </section>
         </aside>
 

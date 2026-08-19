@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#e7e1d3" />
+    <title>HalfFrameSpacer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">HALF-FRAME FILM TOOL</p>
+          <h1>HalfFrameSpacer</h1>
+        </div>
+        <p class="status" id="status" aria-live="polite">Sample pair loaded</p>
+      </header>
+
+      <section class="workspace" aria-label="Film merge workspace">
+        <aside class="controls-panel">
+          <section class="panel-section">
+            <div class="section-heading">
+              <span>01</span>
+              <h2>Source frames</h2>
+            </div>
+            <div class="source-stack">
+              <article class="source-card" data-slot="left">
+                <div class="source-topline"><span>LEFT FRAME</span><span id="leftMeta">Sample 01</span></div>
+                <button class="image-drop" type="button" data-open-file="left" aria-label="Choose left frame">
+                  <img id="leftThumb" alt="Left film frame preview" />
+                  <span class="drop-overlay">Replace image</span>
+                </button>
+                <div class="source-actions">
+                  <button class="icon-button" type="button" data-rotate="left" data-amount="-90" title="Rotate left frame counterclockwise" aria-label="Rotate left frame counterclockwise">↶</button>
+                  <button class="icon-button" type="button" data-rotate="left" data-amount="90" title="Rotate left frame clockwise" aria-label="Rotate left frame clockwise">↷</button>
+                </div>
+                <input id="leftInput" type="file" accept="image/jpeg,image/png,image/webp" hidden />
+              </article>
+              <article class="source-card" data-slot="right">
+                <div class="source-topline"><span>RIGHT FRAME</span><span id="rightMeta">Sample 02</span></div>
+                <button class="image-drop" type="button" data-open-file="right" aria-label="Choose right frame">
+                  <img id="rightThumb" alt="Right film frame preview" />
+                  <span class="drop-overlay">Replace image</span>
+                </button>
+                <div class="source-actions">
+                  <button class="icon-button" type="button" data-rotate="right" data-amount="-90" title="Rotate right frame counterclockwise" aria-label="Rotate right frame counterclockwise">↶</button>
+                  <button class="icon-button" type="button" data-rotate="right" data-amount="90" title="Rotate right frame clockwise" aria-label="Rotate right frame clockwise">↷</button>
+                </div>
+                <input id="rightInput" type="file" accept="image/jpeg,image/png,image/webp" hidden />
+              </article>
+            </div>
+          </section>
+
+          <section class="panel-section">
+            <div class="section-heading"><span>02</span><h2>Film gap</h2></div>
+            <label class="range-label" for="gapRange"><span>Gap width</span><output id="gapValue">9.8%</output></label>
+            <input id="gapRange" type="range" min="0" max="25" step="0.1" value="9.8" />
+            <label class="toggle-row" for="grainToggle"><span>Fine grain</span><input id="grainToggle" type="checkbox" checked /><i></i></label>
+          </section>
+
+          <section class="panel-section">
+            <div class="section-heading"><span>03</span><h2>Export</h2></div>
+            <label class="select-label" for="formatSelect">File format</label>
+            <select id="formatSelect"><option value="image/jpeg">JPEG</option><option value="image/png">PNG</option></select>
+            <label class="range-label" for="qualityRange"><span>JPEG quality</span><output id="qualityValue">92</output></label>
+            <input id="qualityRange" type="range" min="70" max="100" step="1" value="92" />
+            <button class="export-button" id="exportButton" type="button">Export merged frame <span>↓</span></button>
+          </section>
+        </aside>
+
+        <section class="preview-panel">
+          <div class="preview-header"><span>MERGED PREVIEW</span><span id="sizeReadout">--</span></div>
+          <div class="canvas-wrap"><canvas id="previewCanvas" aria-label="Merged full-frame film preview"></canvas></div>
+          <p class="preview-note">Frames are placed side by side along their long edges. Rotate either source when your scan orientation differs.</p>
+        </section>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>

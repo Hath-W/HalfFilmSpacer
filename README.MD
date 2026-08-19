@@ -1,10 +1,21 @@
 # HalfFrameSpacer
 
-A lightweight automation tool that seamlessly merges two individual half-frame film scans into a single full-frame panoramic layout, complete with an authentic, customizable simulated film gap (black border) to mimic true full-frame lab scans.
+A lightweight, browser-based tool for joining two half-frame film scans into one full-frame image. It runs locally in the browser: uploaded images never leave the computer.
+
+## Use
+
+Open `index.html` in a modern browser. Replace either sample frame, rotate it when needed, tune the center film gap, and select **Export merged frame**.
+
+The tool defaults to the geometry of the provided `SampleFullFrameFilm.jpg`:
+
+* each landscape crop is rotated 90 degrees counterclockwise into a portrait frame;
+* the two portrait frames are placed side by side along their long edges;
+* the black, fine-grained center gap is 9.8% of the long edge (196 px for the 2005 px sample height).
 
 ## Features
 
-* **Authentic Film Gap Simulation**: Automatically generates a realistic black border/spacer(with noise) between two half-frame images.
-* **Aspect Ratio Preservation**: Merges photos side-by-side while maintaining original image proportions.
-* **Customizable Spacing**: Easily adjust the width of the black frame gap to match different camera styles (e.g., Olympus Pen, Canon Demi).
-* **Batch Processing**: (Optional) Process entire directories of half-frame pairs instantly.
+* Local JPEG, PNG, and WebP loading
+* Independent clockwise/counterclockwise frame rotation
+* Proportional frame fitting for differently sized scans
+* Adjustable black film gap with optional fine grain
+* JPEG and PNG export

@@ -108,8 +108,9 @@ function renderLibrary() {
   state.library.forEach((asset) => {
     const item = document.createElement("article");
     item.className = "library-item";
-    item.innerHTML = `<img src="${asset.image.src}" alt="${asset.name}"><div class="library-add"><button type="button" data-add="left" title="Add ${asset.name} to left queue" aria-label="Add ${asset.name} to left queue">L</button><button type="button" data-add="right" title="Add ${asset.name} to right queue" aria-label="Add ${asset.name} to right queue">R</button></div>`;
+    item.innerHTML = `<img src="${asset.image.src}" alt="${asset.name}"><div class="library-hover-preview" aria-hidden="true"><img src="${asset.image.src}" alt=""></div><button class="library-remove" type="button" title="Remove ${asset.name} from library" aria-label="Remove ${asset.name} from library">×</button><div class="library-add"><button type="button" data-add="left" title="Add ${asset.name} to left queue" aria-label="Add ${asset.name} to left queue">L</button><button type="button" data-add="right" title="Add ${asset.name} to right queue" aria-label="Add ${asset.name} to right queue">R</button></div>`;
     item.querySelectorAll("[data-add]").forEach((button) => button.addEventListener("click", () => addToQueue(button.dataset.add, asset.id)));
+    item.querySelector(".library-remove").addEventListener("click", () => removeFromLibrary(asset.id));
     elements.libraryGrid.append(item);
   });
 }
@@ -151,6 +152,18 @@ function refresh() {
 
 function addToQueue(side, id) {
   state.queues[side].push({ id, rotation: -90 });
+  refresh();
+}
+
+function removeFromLibrary(id) {
+  const asset = state.library.get(id);
+  if (!asset) return;
+  ["left", "right"].forEach((side) => {
+    state.queues[side] = state.queues[side].filter((entry) => entry.id !== id);
+  });
+  state.library.delete(id);
+  if (asset.image.src.startsWith("blob:")) URL.revokeObjectURL(asset.image.src);
+  renderLibrary();
   refresh();
 }
 

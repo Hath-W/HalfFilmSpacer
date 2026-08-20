@@ -1,11 +1,10 @@
-Open `index.html` in a modern browser. Drag several scans into the image library (or choose them in one file selection), then add each scan to the left or right queue. The first scan from each queue forms the preview. Adjust their order or rotate individual queued scans, tune the center film gap, and select **Export queue** to download every complete pair.
 # HalfFrameSpacer
 
 A lightweight, browser-based tool for joining two half-frame film scans into one full-frame image. It runs locally in the browser: uploaded images never leave the computer.
 
 ## Use
 
-Open `index.html` in a modern browser. Replace either sample frame, rotate it when needed, tune the center film gap, and select **Export merged frame**.
+Open `index.html` in a modern browser. Drag scans into the image library (or choose several in one file selection), then add each scan to the left or right queue. Use the previous and next arrows above the merged preview to inspect every complete pair. Queue entries outlined in orange match the pair on screen. Adjust order or orientation as needed, tune the center film gap, and select **Export queue** to download all complete pairs.
 
 The tool defaults to the geometry of the provided `SampleFullFrameFilm.jpg`:
 
@@ -15,8 +14,9 @@ The tool defaults to the geometry of the provided `SampleFullFrameFilm.jpg`:
 
 ## Features
 
-* Local JPEG, PNG, and WebP loading
-* Independent clockwise/counterclockwise frame rotation
+* Local multi-file JPEG, PNG, and WebP library with drag-and-drop loading
+* Two ordered pairing queues with previous/next pair preview navigation
+* Independent clockwise/counterclockwise rotation for every queued scan
 * Proportional frame fitting for differently sized scans
 * Adjustable black film gap with optional fine grain
-* JPEG and PNG export
+* JPEG and PNG export for every complete queue pair

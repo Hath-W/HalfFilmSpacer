@@ -3,6 +3,7 @@ const state = {
   right: { image: null, rotation: -90, name: "Sample 02" },
   library: new Map(),
   queues: { left: [], right: [] },
+  previewIndex: 0,
   nextId: 1,
 };
 
@@ -23,10 +24,13 @@ const elements = {
   libraryInput: document.querySelector("#libraryInput"),
   queues: { left: document.querySelector("#leftQueue"), right: document.querySelector("#rightQueue") },
   queueCounts: { left: document.querySelector("#leftQueueCount"), right: document.querySelector("#rightQueueCount") },
+  previousPair: document.querySelector("#previousPair"),
+  nextPair: document.querySelector("#nextPair"),
+  pairReadout: document.querySelector("#pairReadout"),
 };
 
 function activeFrame(side) {
-  const queued = state.queues[side][0];
+  const queued = state.queues[side][state.previewIndex];
   if (!queued) return null;
   const asset = state.library.get(queued.id);
   return asset && { ...asset, rotation: queued.rotation };
@@ -68,6 +72,8 @@ function drawGap(context, layout) {
   const x = layout.leftWidth;
   context.fillStyle = "#080908";
   context.fillRect(x, 0, layout.gap, layout.height);
+  drawFilmEdge(context, x, layout.height, -1);
+  drawFilmEdge(context, x + layout.gap, layout.height, 1);
   if (!elements.grain.checked || !layout.gap) return;
   const imageData = context.getImageData(x, 0, layout.gap, layout.height);
   for (let index = 0; index < imageData.data.length; index += 4) {
@@ -78,6 +84,30 @@ function drawGap(context, layout) {
     imageData.data[index + 3] = 255;
   }
   context.putImageData(imageData, x, 0);
+}
+
+function drawFilmEdge(context, edgeX, height, direction) {
+  const edgeWidth = Math.max(5, Math.min(18, Math.round(height * 0.006)));
+  const startX = direction < 0 ? edgeX - edgeWidth : edgeX;
+  const gradient = context.createLinearGradient(startX, 0, startX + edgeWidth, 0);
+  if (direction < 0) {
+    gradient.addColorStop(0, "rgba(8, 9, 8, 0)");
+    gradient.addColorStop(0.58, "rgba(8, 9, 8, .32)");
+    gradient.addColorStop(1, "rgba(8, 9, 8, .92)");
+  } else {
+    gradient.addColorStop(0, "rgba(8, 9, 8, .92)");
+    gradient.addColorStop(0.42, "rgba(8, 9, 8, .32)");
+    gradient.addColorStop(1, "rgba(8, 9, 8, 0)");
+  }
+  context.fillStyle = gradient;
+  context.fillRect(startX, 0, edgeWidth, height);
+
+  context.fillStyle = "rgba(8, 9, 8, .18)";
+  for (let y = 0; y < height; y += 3) {
+    const waveringEdge = edgeX + direction * (Math.random() * 3 - 1.5);
+    const width = 2 + Math.random() * 4;
+    context.fillRect(direction < 0 ? waveringEdge - width : waveringEdge, y, width, 1);
+  }
 }
 
 function render(canvas = elements.canvas, pair = activePair(), updateReadout = canvas === elements.canvas) {
@@ -128,7 +158,7 @@ function renderQueues() {
     queue.forEach((entry, index) => {
       const asset = state.library.get(entry.id);
       const item = document.createElement("li");
-      item.className = "queue-item";
+      item.className = `queue-item${index === state.previewIndex && index < pairCount() ? " selected" : ""}`;
       item.innerHTML = `<img class="queue-thumb" src="${asset.image.src}" alt=""><div><span class="queue-name">${fileLabel(asset.name)}</span><div class="queue-actions"><button type="button" data-action="up" title="Move earlier" aria-label="Move ${asset.name} earlier">↑</button><button type="button" data-action="down" title="Move later" aria-label="Move ${asset.name} later">↓</button><button type="button" data-action="rotate-left" title="Rotate counterclockwise" aria-label="Rotate ${asset.name} counterclockwise">↶</button><button type="button" data-action="rotate-right" title="Rotate clockwise" aria-label="Rotate ${asset.name} clockwise">↷</button><button type="button" data-action="remove" title="Remove from queue" aria-label="Remove ${asset.name} from queue">×</button></div></div>`;
       item.querySelectorAll("[data-action]").forEach((button) => button.addEventListener("click", () => changeQueueEntry(side, index, button.dataset.action)));
       list.append(item);
@@ -140,8 +170,13 @@ function renderQueues() {
 }
 
 function refresh() {
+  const count = pairCount();
+  state.previewIndex = count ? Math.min(state.previewIndex, count - 1) : 0;
   renderQueues();
-  if (render()) elements.status.textContent = `Previewing pair 1 of ${pairCount()}`;
+  elements.pairReadout.textContent = count ? `Pair ${state.previewIndex + 1} of ${count}` : "No complete pairs";
+  elements.previousPair.disabled = state.previewIndex === 0;
+  elements.nextPair.disabled = !count || state.previewIndex === count - 1;
+  if (render()) elements.status.textContent = `Previewing pair ${state.previewIndex + 1} of ${count}`;
   else {
     elements.canvas.width = 0;
     elements.canvas.height = 0;
@@ -174,6 +209,13 @@ function changeQueueEntry(side, index, action) {
   if (action === "rotate-right") queue[index].rotation += 90;
   if (action === "up" && index > 0) [queue[index - 1], queue[index]] = [queue[index], queue[index - 1]];
   if (action === "down" && index < queue.length - 1) [queue[index + 1], queue[index]] = [queue[index], queue[index + 1]];
+  refresh();
+}
+
+function changePreviewPair(direction) {
+  const nextIndex = state.previewIndex + direction;
+  if (nextIndex < 0 || nextIndex >= pairCount()) return;
+  state.previewIndex = nextIndex;
   refresh();
 }
 
@@ -238,6 +280,8 @@ elements.gap.addEventListener("input", () => { elements.gapValue.value = `${elem
 elements.grain.addEventListener("change", refresh);
 elements.quality.addEventListener("input", () => { elements.qualityValue.value = elements.quality.value; });
 elements.export.addEventListener("click", exportQueue);
+elements.previousPair.addEventListener("click", () => changePreviewPair(-1));
+elements.nextPair.addEventListener("click", () => changePreviewPair(1));
 
 async function loadSamplePair() {
   const samples = [

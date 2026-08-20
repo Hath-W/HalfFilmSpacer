@@ -68,6 +68,11 @@
 
         <section class="preview-panel">
           <div class="preview-header"><span>MERGED PREVIEW</span><span id="sizeReadout">--</span></div>
+          <div class="pair-nav" aria-label="Preview pair navigation">
+            <button class="pair-nav-button" id="previousPair" type="button" aria-label="Preview previous pair">←</button>
+            <span id="pairReadout">No complete pairs</span>
+            <button class="pair-nav-button" id="nextPair" type="button" aria-label="Preview next pair">→</button>
+          </div>
           <div class="canvas-wrap"><canvas id="previewCanvas" aria-label="Merged full-frame film preview"></canvas></div>
           <p class="preview-note">Frames are placed side by side along their long edges. Rotate either source when your scan orientation differs.</p>
         </section>
